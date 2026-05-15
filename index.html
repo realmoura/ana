@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>SAIF | Sistema Automático de Identificação de Frotas</title>
+
+  <meta name="description" content="SAIF - Tecnologia inteligente em eletroeletrônica para automação de acessos e monitoramento logístico em tempo real.">
+
+  <!-- Segurança -->
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <!-- Fonte -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:'Poppins',sans-serif;
+      background:#050505;
+      color:white;
+      overflow-x:hidden;
+    }
+
+    ::selection{
+      background:#00ff9d;
+      color:#000;
+    }
+
+    /* Scroll */
+
+    ::-webkit-scrollbar{
+      width:8px;
+    }
+
+    ::-webkit-scrollbar-track{
+      background:#0b0b0b;
+    }
+
+    ::-webkit-scrollbar-thumb{
+      background:#00d9ff;
+      border-radius:20px;
+    }
+
+    /* Fundo */
+
+    body::before{
+      content:"";
+      position:fixed;
+      width:100%;
+      height:100%;
+      background:
+      radial-gradient(circle at top left,#00d9ff15,transparent 30%),
+      radial-gradient(circle at bottom right,#00ff9d15,transparent 30%);
+      z-index:-1;
+    }
+
+    /* NAVBAR */
+
+    nav{
+      position:fixed;
+      top:0;
+      width:100%;
+      padding:20px 8%;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      backdrop-filter:blur(10px);
+      background:#00000080;
+      border-bottom:1px solid #00d9ff30;
+      z-index:1000;
+    }
+
+    .logo{
+      font-family:'Orbitron',sans-serif;
+      font-size:28px;
+      font-weight:900;
+      color:#00d9ff;
+      text-shadow:0 0 15px #00d9ff;
+    }
+
+    nav ul{
+      display:flex;
+      list-style:none;
+      gap:30px;
+    }
+
+    nav ul li a{
+      color:white;
+      text-decoration:none;
+      transition:.3s;
+      font-size:15px;
+      position:relative;
+    }
+
+    nav ul li a:hover{
+      color:#00ff9d;
+    }
+
+    nav ul li a::after{
+      content:"";
+      width:0%;
+      height:2px;
+      background:#00ff9d;
+      position:absolute;
+      bottom:-5px;
+      left:0;
+      transition:.3s;
+    }
+
+    nav ul li a:hover::after{
+      width:100%;
+    }
+
+    /* HERO */
+
+    .hero{
+      min-height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      padding:120px 8%;
+      position:relative;
+    }
+
+    .hero-content{
+      max-width:1000px;
+      animation:fadeUp 1.5s ease;
+    }
+
+    .hero h1{
+      font-size:70px;
+      font-family:'Orbitron',sans-serif;
+      color:#00d9ff;
+      text-shadow:
+      0 0 10px #00d9ff,
+      0 0 20px #00d9ff,
+      0 0 40px #00d9ff;
+      margin-bottom:20px;
+    }
+
+    .hero h2{
+      font-size:28px;
+      color:#00ff9d;
+      margin-bottom:25px;
+      font-weight:400;
+    }
+
+    .hero p{
+      font-size:18px;
+      line-height:1.8;
+      color:#d9d9d9;
+      margin-bottom:40px;
+    }
+
+    .hero-btns{
+      display:flex;
+      gap:20px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .btn{
+      padding:15px 35px;
+      border:none;
+      cursor:pointer;
+      border-radius:12px;
+      font-size:16px;
+      font-weight:600;
+      transition:.4s;
+      text-decoration:none;
+    }
+
+    .btn-primary{
+      background:#00d9ff;
+      color:black;
+      box-shadow:0 0 20px #00d9ff;
+    }
+
+    .btn-primary:hover{
+      transform:translateY(-5px);
+      box-shadow:0 0 35px #00d9ff;
+    }
+
+    .btn-secondary{
+      border:2px solid #00ff9d;
+      color:#00ff9d;
+      background:transparent;
+    }
+
+    .btn-secondary:hover{
+      background:#00ff9d;
+      color:black;
+      box-shadow:0 0 25px #00ff9d;
+    }
+
+    /* Sections */
+
+    section{
+      padding:100px 8%;
+    }
+
+    .section-title{
+      text-align:center;
+      margin-bottom:60px;
+    }
+
+    .section-title h2{
+      font-size:42px;
+      color:#00d9ff;
+      font-family:'Orbitron',sans-serif;
+      margin-bottom:10px;
+    }
+
+    .section-title p{
+      color:#bdbdbd;
+    }
+
+    /* Cards */
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+      gap:30px;
+    }
+
+    .card{
+      background:#0c0c0c;
+      border:1px solid #00d9ff20;
+      border-radius:20px;
+      padding:35px;
+      transition:.4s;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      width:200%;
+      height:200%;
+      background:linear-gradient(45deg,transparent,#00d9ff10,transparent);
+      top:-50%;
+      left:-50%;
+      transform:rotate(25deg);
+    }
+
+    .card:hover{
+      transform:translateY(-10px);
+      border-color:#00ff9d;
+      box-shadow:0 0 30px #00ff9d20;
+    }
+
+    .card h3{
+      color:#00ff9d;
+      margin-bottom:15px;
+      font-size:22px;
+    }
+
+    .card p{
+      line-height:1.8;
+      color:#d3d3d3;
+    }
+
+    /* Empresa */
+
+    .empresa{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:50px;
+      align-items:center;
+    }
+
+    .empresa-text h3{
+      color:#00ff9d;
+      font-size:30px;
+      margin-bottom:20px;
+    }
+
+    .empresa-text p{
+      line-height:1.9;
+      color:#d9d9d9;
+    }
+
+    .empresa-box{
+      background:#0d0d0d;
+      border:1px solid #00d9ff20;
+      padding:40px;
+      border-radius:20px;
+      box-shadow:0 0 30px #00d9ff10;
+    }
+
+    /* Missão */
+
+    .mission-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:30px;
+    }
+
+    .mission{
+      background:#0c0c0c;
+      border-left:5px solid #00ff9d;
+      padding:35px;
+      border-radius:20px;
+      transition:.4s;
+    }
+
+    .mission:hover{
+      transform:scale(1.03);
+    }
+
+    .mission h3{
+      margin-bottom:15px;
+      color:#00d9ff;
+    }
+
+    /* Contato */
+
+    .contact{
+      text-align:center;
+    }
+
+    .contact p{
+      margin:10px 0;
+      color:#d3d3d3;
+    }
+
+    .founders{
+      margin-top:30px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:20px;
+    }
+
+    .founder{
+      background:#0d0d0d;
+      padding:25px;
+      border-radius:15px;
+      border:1px solid #00ff9d20;
+    }
+
+    /* Footer */
+
+    footer{
+      padding:30px;
+      text-align:center;
+      border-top:1px solid #00d9ff20;
+      background:#000;
+      color:#8d8d8d;
+      font-size:14px;
+    }
+
+    footer span{
+      color:#00ff9d;
+    }
+
+    /* Animações */
+
+    @keyframes fadeUp{
+      from{
+        opacity:0;
+        transform:translateY(40px);
+      }
+
+      to{
+        opacity:1;
+        transform:translateY(0);
+      }
+    }
+
+    /* Responsivo */
+
+    @media(max-width:900px){
+
+      nav{
+        flex-direction:column;
+        gap:20px;
+      }
+
+      nav ul{
+        flex-wrap:wrap;
+        justify-content:center;
+      }
+
+      .hero h1{
+        font-size:45px;
+      }
+
+      .hero h2{
+        font-size:22px;
+      }
+
+      .empresa{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+  </style>
+</head>
+<body>
+
+<!-- Desenvolvido com dedicação especial para Ana Laura -->
+
+<nav>
+
+  <div class="logo">SAIF</div>
+
+  <ul>
+    <li><a href="#home">Home</a></li>
+    <li><a href="#tecnologia">Nossa Tecnologia</a></li>
+    <li><a href="#empresa">A Empresa</a></li>
+    <li><a href="#missao">Missão, Visão e Valores</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+
+</nav>
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+  <div class="hero-content">
+
+    <h1>SAIF</h1>
+
+    <h2>Sistema Automático de Identificação de Frotas</h2>
+
+    <p>
+      Tecnologia inteligente em eletroeletrônica para automação de acessos e monitoramento logístico em tempo real.
+      Uma solução robusta desenvolvida para otimizar o fluxo de veículos industriais de forma 100% autônoma e sem necessidade de intervenção humana.
+    </p>
+
+    <div class="hero-btns">
+      <a href="#tecnologia" class="btn btn-primary">Explorar Tecnologia</a>
+      <a href="#contato" class="btn btn-secondary">Fale Conosco</a>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- TECNOLOGIA -->
+
+<section id="tecnologia">
+
+  <div class="section-title">
+    <h2>Nossa Tecnologia</h2>
+    <p>Arquitetura Operacional em 5 Blocos</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card">
+      <h3>Identificação</h3>
+      <p>
+        Leitura automatizada através do módulo RFID MFRC522 e tag passiva exclusiva fixada no veículo.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Detecção de Fluxo</h3>
+      <p>
+        Sensores de presença sequenciais detectam automaticamente entrada e saída dos veículos.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Processamento</h3>
+      <p>
+        O Arduino Mega centraliza sinais, interpreta fluxos e valida credenciais de segurança.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Atuação Mecânica</h3>
+      <p>
+        Servo motor MG996R controla fisicamente a barreira de acesso em tempo real.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>Interface e Dados</h3>
+      <p>
+        Dados operacionais enviados via USB para monitoramento em tempo real no Excel Data Streamer.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- EMPRESA -->
+
+<section id="empresa">
+
+  <div class="section-title">
+    <h2>A Empresa</h2>
+    <p>Inovação tecnológica aplicada à automação industrial</p>
+  </div>
+
+  <div class="empresa">
+
+    <div class="empresa-text">
+
+      <h3>Origem do Projeto</h3>
+
+      <p>
+        A SAIF nasceu dentro do ambiente de inovação tecnológica da Escola Senai Shunji Nishimura, em Pompeia (SP),
+        através da união de desenvolvedores do curso técnico em eletroeletrônica.
+      </p>
+
+      <br>
+
+      <p>
+        Nosso foco é aplicar engenharia de hardware e automação industrial para solucionar problemas reais
+        de segurança patrimonial e gestão de pátios corporativos.
+      </p>
+
+    </div>
+
+    <div class="empresa-box">
+
+      <h3 style="color:#00ff9d; margin-bottom:20px;">
+        Objetivos da Empresa
+      </h3>
+
+      <p>✔ Desenvolver um protótipo funcional e seguro.</p>
+      <br>
+      <p>✔ Garantir identificação individualizada de frotas.</p>
+      <br>
+      <p>✔ Fornecer histórico preciso de tráfego.</p>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- MISSÃO -->
+
+<section id="missao">
+
+  <div class="section-title">
+    <h2>Missão, Visão e Valores</h2>
+    <p>Os pilares que sustentam o ecossistema SAIF</p>
+  </div>
+
+  <div class="mission-grid">
+
+    <div class="mission">
+      <h3>Missão</h3>
+
+      <p>
+        Prover soluções automatizadas e tecnológicas em eletroeletrônica para controle de acesso veicular,
+        garantindo segurança patrimonial e otimização logística.
+      </p>
+    </div>
+
+    <div class="mission">
+      <h3>Visão</h3>
+
+      <p>
+        Ser referência no desenvolvimento de protótipos físicos e sistemas autônomos de triagem.
+      </p>
+    </div>
+
+    <div class="mission">
+      <h3>Valores</h3>
+
+      <p>
+        Segurança, rigor técnico, inovação, confiabilidade de dados e espírito acadêmico.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+<!-- CONTATO -->
+
+<section id="contato">
+
+  <div class="section-title">
+    <h2>Contato</h2>
+    <p>Equipe de desenvolvedores e engenheiros</p>
+  </div>
+
+  <div class="contact">
+
+    <p>
+      Escola Senai Shunji Nishimura – Pompeia, SP
+    </p>
+
+    <div class="founders">
+
+      <div class="founder">
+        <h3>Ana Julia da Silva Santos</h3>
+      </div>
+
+      <div class="founder">
+        <h3>Ana Laura Amorim Pereira</h3>
+      </div>
+
+      <div class="founder">
+        <h3>Gustavo Rezende da Silva</h3>
+      </div>
+
+      <div class="founder">
+        <h3>Pedro Torres Garcia</h3>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+
+  © 2026 SAIF Technologies — Todos os direitos reservados à <span>Ana Laura</span>.
+
+</footer>
+
+<script>
+
+  // Anti inspeção básica
+
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  document.onkeydown = function(e){
+
+    if(e.keyCode == 123){
+      return false;
+    }
+
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 73){
+      return false;
+    }
+
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 74){
+      return false;
+    }
+
+    if(e.ctrlKey && e.keyCode == 85){
+      return false;
+    }
+
+  }
+
+</script>
+
+</body>
+</html>
